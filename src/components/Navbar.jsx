@@ -61,7 +61,7 @@ function Navbar() {
   const closeMenu = () => setIsOpen(false)
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 p-4">
+    <header className="fixed top-0 left-0 w-full z-50 p-4 sm:p-6">
       <nav className="relative max-w-screen-lg mx-auto flex items-center justify-between px-6 py-3 bg-slate-900/40 backdrop-blur-lg border border-white/10 rounded-full">
         {/* Logo */}
         <a

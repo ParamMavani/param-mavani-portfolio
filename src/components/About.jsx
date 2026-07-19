@@ -1,9 +1,9 @@
 function About() {
   return (
-    <section id="about" className="py-24 sm:py-32">
+    <section id="about" className="py-16 sm:py-24">
       <div className="max-w-screen-lg mx-auto px-4">
         {/* Two-column layout container */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-24 items-start">
           {/* Left Column: Main Content */}
           <div className="flex flex-col gap-8">
             {/* Section Label */}
@@ -20,19 +20,19 @@ function About() {
             </h3>
 
             {/* Paragraphs */}
-            <div className="space-y-6 text-base md:text-lg">
-              <p>
+            <div className="space-y-6 text-base md:text-lg text-text-secondary">
+              <p className="leading-relaxed">
                 I'm Param Mavani, a B.Tech engineering student driven by curiosity and
                 a genuine interest in understanding how technology can turn
                 ideas into something real.
               </p>
-              <p>
+              <p className="leading-relaxed">
                 My journey has taken me across full-stack web development,
                 databases, and AI/ML, where I've learned by building hands-on
                 projects—from e-commerce applications and civic-tech platforms
                 to intelligent detection systems.
               </p>
-              <p>
+              <p className="leading-relaxed">
                 I enjoy exploring new technologies, solving challenging
                 problems, and continuously improving the way I think, build,
                 and create. For me, every project is an opportunity to learn
@@ -42,7 +42,7 @@ function About() {
           </div>
 
           {/* Right Column: Quick Info Panel */}
-          <div className="lg:sticky lg:top-28">
+          <div className="lg:sticky lg:top-36">
             <div className="bg-slate-800/50 backdrop-blur-lg border border-white/10 rounded-2xl p-8 space-y-6">
               <InfoItem label="Currently" value="B.Tech Engineering Student" />
               <div className="w-full h-px bg-white/10"></div>
