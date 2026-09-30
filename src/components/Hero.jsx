@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion'
+
 // Lightweight inline SVG for CTA arrows
 const ArrowRightIcon = () => (
   <svg
@@ -29,7 +31,7 @@ const ChevronDownIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="mt-1 animate-bounce"
+    className="mt-1 animate-bounce motion-reduce:animate-none"
   >
     <polyline points="6 9 12 15 18 9" />
   </svg>
@@ -46,64 +48,92 @@ function Hero() {
         justify-center
         items-center
         min-h-screen
-        pt-28
+        pt-20
         pb-16
-        sm:pt-32
+        sm:pt-24
         sm:pb-20
         px-4
         text-center
       "
     >
-      <div className="max-w-4xl mx-auto flex flex-col items-center">
-
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="max-w-4xl mx-auto flex flex-col items-center md:-translate-y-4"
+      >
         {/* Availability Badge */}
-        <div className="inline-flex items-center bg-slate-800/50 border border-slate-700 rounded-full px-3 py-1 text-xs font-medium tracking-wider text-text-secondary mb-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="inline-flex items-center bg-slate-800/60 border border-slate-700/80 rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wider text-text-secondary mb-6 backdrop-blur-md shadow-sm"
+        >
           <span className="relative flex h-2 w-2 mr-2">
             <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
             <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
           </span>
           AVAILABLE FOR OPPORTUNITIES
-        </div>
+        </motion.div>
 
         {/* Introduction */}
-        <p className="text-base sm:text-lg md:text-xl text-text-secondary mb-3">
-          Hi, I'm Param Mavani.
-        </p>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-base sm:text-lg md:text-xl text-text-secondary mb-3 font-medium"
+        >
+          Hi, I'm <span className="text-white font-semibold">Param Mavani</span>.
+        </motion.p>
 
         {/* Main Heading */}
-        <h1 className="font-bold tracking-tight leading-tight mb-8 text-[2.8rem] sm:text-5xl md:text-6xl lg:text-7xl">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="font-bold tracking-tight leading-tight mb-8 text-[2.7rem] sm:text-5xl md:text-6xl lg:text-7xl"
+        >
           Curious mind. Creative code.
           <br />
-          <span className="bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[var(--accent-primary)] via-cyan-300 to-[var(--accent-secondary)] bg-clip-text text-transparent">
             Meaningful impact.
           </span>
-        </h1>
+        </motion.h1>
 
         {/* Role Line */}
-        <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-sm sm:text-base md:text-lg text-text-secondary mb-12">
-          <span>B.Tech Engineering Student</span>
-
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-sm sm:text-base md:text-lg text-text-secondary mb-8"
+        >
+          <span className="px-3 py-1 rounded-full bg-slate-800/40 border border-white/5">B.Tech IT Student</span>
           <span className="hidden sm:inline text-cyan-400/40">•</span>
-
-          <span>Developer</span>
-
+          <span className="px-3 py-1 rounded-full bg-slate-800/40 border border-white/5">Full-Stack Developer</span>
           <span className="hidden sm:inline text-cyan-400/40">•</span>
-
-          <span>AI Explorer</span>
-        </div>
+          <span className="px-3 py-1 rounded-full bg-slate-800/40 border border-white/5">AI Explorer</span>
+        </motion.div>
 
         {/* Description */}
-        <p className="max-w-2xl text-base md:text-lg text-text-secondary leading-8 md:leading-relaxed mb-14">
-          Exploring the intersection of software development and AI to create
-          practical, thoughtful, and meaningful digital experiences.
-        </p>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="max-w-2xl text-base md:text-lg text-text-secondary leading-8 md:leading-relaxed mb-12"
+        >
+          Exploring the intersection of modern software development, computer vision, and machine learning to build practical, scalable, and intuitive digital tools.
+        </motion.p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto">
-
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
+        >
           <a
             href="#projects"
-            className="group flex items-center justify-center w-full sm:w-auto px-8 py-3 rounded-full bg-[var(--accent-primary)] text-black font-semibold transition-all duration-300 hover:scale-105"
+            className="group flex items-center justify-center w-full sm:w-auto px-8 py-3.5 rounded-full bg-[var(--accent-primary)] text-black font-semibold transition-all duration-300 hover:scale-102 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-500/25 active:scale-98"
           >
             Explore My Work
             <ArrowRightIcon />
@@ -111,23 +141,21 @@ function Hero() {
 
           <a
             href="#contact"
-            className="group flex items-center justify-center w-full sm:w-auto px-8 py-3 rounded-full border border-slate-700 bg-slate-800/50 text-text-primary transition-all duration-300 hover:bg-slate-800"
+            className="group flex items-center justify-center w-full sm:w-auto px-8 py-3.5 rounded-full border border-slate-700 bg-slate-800/60 text-text-primary transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:-translate-y-0.5 active:scale-98"
           >
             Let's Connect
             <ArrowRightIcon />
           </a>
-
-        </div>
+        </motion.div>
 
         {/* Scroll Indicator */}
         <div className="hidden sm:flex mt-16 flex-col items-center text-text-secondary">
-          <span className="text-xs tracking-[0.25em] uppercase">
+          <span className="text-xs tracking-[0.25em] uppercase text-slate-400">
             Scroll to explore
           </span>
           <ChevronDownIcon />
         </div>
-
-      </div>
+      </motion.div>
     </section>
   )
 }

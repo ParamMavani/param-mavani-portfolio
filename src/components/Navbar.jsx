@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 // Lightweight inline SVG for the external link icon
 const ExternalLinkIcon = () => (
@@ -11,7 +11,6 @@ const ExternalLinkIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="ml-1.5"
   >
     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
     <polyline points="15 3 21 3 21 9"></polyline>
@@ -50,50 +49,126 @@ const navLinks = [
   { href: '#about', text: 'About' },
   { href: '#skills', text: 'Skills' },
   { href: '#projects', text: 'Projects' },
+  { href: '#certifications', text: 'Academics' },
   { href: '#journey', text: 'Journey' },
   { href: '#contact', text: 'Contact' },
 ]
 
-function Navbar() {
+function Navbar({ onOpenResume }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
+  const sectionsRef = useRef([])
+
+  // Handle navbar visibility on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 80) {
+        setIsVisible(true)
+      } else {
+        setIsVisible(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Handle active section highlighting
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id)
+          }
+        });
+      },
+      { rootMargin: '-40% 0px -40% 0px' }
+    )
+
+    sectionsRef.current = navLinks
+      .map((link) => document.querySelector(link.href))
+      .filter((el) => el)
+
+    const homeSection = document.querySelector('#home')
+    if (homeSection) sectionsRef.current.unshift(homeSection)
+
+    sectionsRef.current.forEach((section) => observer.observe(section))
+
+    return () => sectionsRef.current.forEach((section) => observer.unobserve(section))
+  }, [])
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isOpen])
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
 
+  const handleResumeClick = (e) => {
+    if (onOpenResume) {
+      e.preventDefault()
+      onOpenResume()
+      closeMenu()
+    }
+  }
+
   return (
-    <header className="fixed top-0 left-0 w-full z-50 p-4 sm:p-6">
-      <nav className="relative max-w-screen-lg mx-auto flex items-center justify-between px-6 py-3 bg-slate-900/40 backdrop-blur-lg border border-white/10 rounded-full">
+    <header
+      className={`fixed top-0 left-0 w-full z-40 p-4 sm:p-5 transition-all duration-300 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3 pointer-events-none'
+      }`}
+    >
+      <nav className="relative max-w-screen-lg mx-auto flex items-center justify-between px-6 py-2.5 bg-slate-900/80 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
         {/* Logo */}
         <a
-          href="#"
+          href="#home"
           onClick={closeMenu}
-          className="text-xl font-mono font-bold tracking-tighter text-text-primary hover:text-accent-primary transition-colors"
+          className="text-lg font-mono font-bold tracking-tighter text-text-primary transition-all duration-300 hover:text-cyan-400"
         >
           &lt;PM /&gt;
         </a>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+              className={`relative px-3.5 py-1.5 text-xs font-medium rounded-full transition-all duration-300 ${
+                activeSection === link.href.substring(1)
+                  ? 'text-cyan-300 font-semibold'
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
             >
               {link.text}
+              {activeSection === link.href.substring(1) && (
+                <span className="absolute inset-0 bg-cyan-400/10 border border-cyan-400/20 rounded-full -z-10 shadow-[0_0_8px_rgba(34,211,238,0.2)]"></span>
+              )}
             </a>
           ))}
         </div>
 
         {/* Desktop Resume Button */}
-        <a
-          href="/resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden md:flex items-center justify-center text-sm px-4 py-2 bg-transparent border border-accent-primary text-accent-primary rounded-full hover:bg-accent-primary/10 transition-colors"
+        <button
+          onClick={handleResumeClick}
+          type="button"
+          className="group hidden md:flex items-center justify-center text-xs font-semibold px-4 py-2 bg-transparent border border-cyan-400/60 text-cyan-300 rounded-full transition-all duration-300 hover:bg-cyan-400/10 hover:border-cyan-300 hover:shadow-[0_0_15px_-4px_rgba(34,211,238,0.4)] active:scale-98"
         >
-          Resume <ExternalLinkIcon />
-        </a>
+          Resume{' '}
+          <span className="ml-1.5 transition-transform duration-300 group-hover:translate-x-0.5">
+            <ExternalLinkIcon />
+          </span>
+        </button>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -101,7 +176,7 @@ function Navbar() {
             onClick={toggleMenu}
             aria-label="Toggle navigation menu"
             aria-expanded={isOpen}
-            className="text-text-primary"
+            className="text-text-primary p-1 focus:outline-none"
           >
             <MenuIcon isOpen={isOpen} />
           </button>
@@ -109,16 +184,24 @@ function Navbar() {
 
         {/* Mobile Navigation Menu */}
         {isOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 mt-3 p-6 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl">
-            <div className="flex flex-col items-center gap-6">
+          <div className="md:hidden absolute top-full left-0 right-0 mt-3 p-6 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl animate-slide-down">
+            <div className="flex flex-col items-center gap-5">
               {navLinks.map((link) => (
-                <a key={link.href} href={link.href} onClick={closeMenu} className="text-lg text-text-secondary hover:text-accent-primary transition-colors">
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMenu}
+                  className="text-base text-text-secondary hover:text-cyan-300 transition-colors"
+                >
                   {link.text}
                 </a>
               ))}
-              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full text-lg px-4 py-3 bg-accent-primary/90 text-bg-primary rounded-full font-semibold">
+              <button
+                onClick={handleResumeClick}
+                className="flex items-center justify-center gap-1.5 w-full text-sm py-2.5 bg-cyan-400 text-black rounded-full font-semibold active:scale-98 transition-colors hover:bg-cyan-300"
+              >
                 Resume <ExternalLinkIcon />
-              </a>
+              </button>
             </div>
           </div>
         )}

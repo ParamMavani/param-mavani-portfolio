@@ -1,4 +1,6 @@
 import PythonIcon from '../assets/icons/python.svg'
+import { memo } from 'react'
+import { motion } from 'framer-motion'
 import JavaScriptIcon from '../assets/icons/javascript.svg'
 import CppIcon from '../assets/icons/cplusplus.svg'
 import MySQLIcon from '../assets/icons/mysql.svg'
@@ -21,15 +23,15 @@ import PostmanIcon from '../assets/icons/postman.svg'
 // Lightweight inline SVG for the external link indicator
 const ExternalLinkIndicator = () => (
   <svg
-    width="16"
-    height="16"
+    width="14"
+    height="14"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="text-[var(--accent-primary)] opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2"
+    className="text-[var(--accent-primary)] opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-1.5"
   >
     <line x1="7" y1="17" x2="17" y2="7"></line>
     <polyline points="7 7 17 7 17 17"></polyline>
@@ -64,7 +66,7 @@ const skillsData = [
     ],
   },
   {
-    category: 'AI / ML & Data',
+    category: 'AI / ML & Data Science',
     technologies: [
       { name: 'Pandas', icon: PandasIcon, url: 'https://pandas.pydata.org' },
       { name: 'NumPy', icon: NumpyIcon, url: 'https://numpy.org' },
@@ -84,62 +86,74 @@ const skillsData = [
   },
 ]
 
-const SkillChip = ({ name, icon, url }) => {
+const SkillChip = memo(({ name, icon, url }) => {
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      title="Visit Official Website"
-      className="group flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-slate-800/50 px-3 py-2 transition-all duration-200 hover:-translate-y-1 hover:border-cyan-400 hover:bg-slate-700/50"
+      title={`Visit ${name} Website`}
+      className="group flex cursor-pointer items-center gap-2.5 rounded-xl border border-white/10 bg-slate-800/40 px-3.5 py-2 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-slate-700/50 hover:shadow-lg hover:shadow-cyan-400/10"
     >
       <img
         src={icon}
         alt={name}
-        className="h-5 w-5 flex-shrink-0 object-contain transition-transform duration-300 group-hover:rotate-6"
+        className="h-5 w-5 flex-shrink-0 object-contain transition-transform duration-300 group-hover:scale-110"
       />
-      <span className="font-medium text-text-primary">{name}</span>
+      <span className="text-sm font-medium text-text-primary">{name}</span>
       <div className="ml-auto pl-1">
         <ExternalLinkIndicator />
       </div>
     </a>
   )
-}
+})
 
 function Skills() {
   return (
-    <section id="skills" className="py-24 sm:py-32">
+    <section id="skills" aria-labelledby="skills-heading" className="py-24 sm:py-32 relative">
       <div className="max-w-screen-lg mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-2xl mx-auto mb-16"
+        >
           <div className="flex items-center justify-center gap-3 mb-4">
             <span className="text-[var(--accent-primary)] font-mono">02 /</span>
-            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-              SKILLS & TECHNOLOGIES
+            <h2 id="skills-heading" className="text-2xl font-semibold tracking-tight text-text-primary">
+              SKILLS &amp; TECHNOLOGIES
             </h2>
           </div>
           <h3 className="mb-4 text-3xl font-bold tracking-tighter text-text-primary md:text-4xl">
             Building with the right tools.
           </h3>
-          <p className="text-base md:text-lg">
-            Every project has helped me build a toolkit of technologies I enjoy
-            learning and working with.
+          <p className="text-base md:text-lg text-text-secondary">
+            Every project has helped me build a versatile toolkit of technologies across modern web, machine learning, and systems.
           </p>
-        </div>
+        </motion.div>
 
         {/* Vertically Stacked Categories */}
-        <div className="flex flex-col gap-12">
-          {skillsData.map((category) => (
-            <div key={category.category}>
-              <h4 className="mb-6 text-sm font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
+        <div className="flex flex-col gap-10">
+          {skillsData.map((category, idx) => (
+            <motion.div
+              key={category.category}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.1 }}
+              className="p-6 rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-xl"
+            >
+              <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[var(--accent-primary)]">
                 {category.category}
               </h4>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3">
                 {category.technologies.map((tech) => (
                   <SkillChip key={tech.name} {...tech} />
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

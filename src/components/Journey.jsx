@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState, memo } from 'react'
 import {
   BrainCircuit,
   CodeXml,
@@ -7,6 +8,29 @@ import {
   Rocket,
   Terminal,
 } from 'lucide-react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+
+// Custom hook for detecting when an element is in view
+const useInView = (options) => {
+  const ref = useRef(null)
+  const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true)
+        if (options?.triggerOnce) {
+          observer.unobserve(entry.target)
+        }
+      }
+    }, options)
+
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [ref, options])
+
+  return [ref, isInView]
+}
 
 const milestones = [
   {
@@ -67,7 +91,7 @@ const milestones = [
   },
 ];
 
-const TimelineCard = ({
+const TimelineCard = memo(({
   year,
   subtitle,
   title,
@@ -76,14 +100,20 @@ const TimelineCard = ({
   icon: Icon,
 }) => {
   const isLeft = side === "left";
-  const cardAlignment = isLeft ? 'md:col-start-1 md:col-end-2' : 'md:col-start-3 md:col-end-4';
+  const cardAlignment = isLeft ? 'md:col-start-1 md:col-end-2' : 'md:col-start-3 md:col-end-4'
+  const [ref, isInView] = useInView({ threshold: 0.4, triggerOnce: true })
 
   return (
-    <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] md:gap-x-6 items-center group">
+    <div
+      ref={ref}
+      className={`relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] md:gap-x-6 items-center group transition-all duration-700 ease-out ${
+        isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5 md:translate-y-8'
+      } motion-reduce:opacity-100 motion-reduce:translate-y-0`}
+    >
       {/* Card */}
       <div className={`md:row-start-1 ${cardAlignment}`}>
         <div
-          className="relative p-8 bg-slate-800/50 backdrop-blur-lg border border-white/10 rounded-2xl shadow-lg transition-all duration-300 group-hover:-translate-y-1 group-hover:border-cyan-400/30 group-hover:shadow-2xl"
+          className={`relative p-8 bg-slate-800/50 backdrop-blur-lg border border-white/10 rounded-2xl shadow-lg transition-all duration-300 group-hover:-translate-y-1 group-hover:border-cyan-400/30 group-hover:shadow-xl`}
         >
           <div className="mb-5">
             {(year || subtitle) && (
@@ -118,21 +148,31 @@ const TimelineCard = ({
 
       {/* Node - always centered */}
       <div className="hidden md:block md:row-start-1 md:col-start-2 md:col-end-3">
-        <div className="h-5 w-5 rounded-full border-2 border-cyan-400 bg-slate-900 shadow-[0_0_10px_2px_var(--accent-primary)] transition-all duration-300 group-hover:shadow-[0_0_18px_4px_var(--accent-primary)] group-hover:scale-110 z-10"></div>
+        <div
+          className={`h-5 w-5 rounded-full border-2 border-cyan-400 bg-slate-900 transition-all duration-500 ease-out z-10 ${
+            isInView
+              ? 'scale-100 shadow-[0_0_12px_3px_var(--accent-primary)]'
+              : 'scale-90 shadow-none'
+          } motion-reduce:scale-100 motion-reduce:shadow-[0_0_10px_2px_var(--accent-primary)]`}
+        ></div>
       </div>
     </div>
   );
-};
+});
 
 function Journey() {
+  const timelineRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: timelineRef, offset: ["start center", "end center"] })
+  const pathHeight = useTransform(scrollYProgress, [0, 0.8], ["0%", "100%"])
+
   return (
-    <section id="journey" className="py-24 sm:py-32">
+    <section id="journey" aria-labelledby="journey-heading" className="py-24 sm:py-32">
       <div className="max-w-5xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mx-auto mb-12 max-w-3xl">
           <div className="mb-4 flex items-center justify-center gap-3">
             <span className="font-mono text-[var(--accent-primary)]">04 /</span>
-            <h2 className="text-3xl font-semibold tracking-tight text-text-primary">
+            <h2 id="journey-heading" className="text-3xl font-semibold tracking-tight text-text-primary">
               MY JOURNEY
             </h2>
           </div>
@@ -146,7 +186,7 @@ function Journey() {
         </div>
 
         {/* Timeline Container */}
-        <div className="relative mx-auto mt-16 max-w-4xl">
+        <div ref={timelineRef} className="relative mx-auto mt-16 max-w-4xl">
           {/* The vertical line */}
           <div
             className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-cyan-400/20"
@@ -154,6 +194,14 @@ function Journey() {
               boxShadow: '0 0 8px 0px var(--accent-primary)',
             }}
           ></div>
+          {/* Animated progress line */}
+          <motion.div
+            className="absolute left-1/2 top-0 w-px -translate-x-1/2 bg-cyan-400"
+            style={{
+              height: pathHeight,
+              boxShadow: '0 0 12px 1px var(--accent-primary)',
+            }}
+          />
 
           {/* Milestones mapped here */}
           <div className="space-y-16 md:space-y-0">
