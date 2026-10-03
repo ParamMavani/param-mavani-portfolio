@@ -54,7 +54,7 @@ const navLinks = [
   { href: '#contact', text: 'Contact' },
 ]
 
-function Navbar({ onOpenResume }) {
+function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
@@ -114,14 +114,6 @@ function Navbar({ onOpenResume }) {
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
 
-  const handleResumeClick = (e) => {
-    if (onOpenResume) {
-      e.preventDefault()
-      onOpenResume()
-      closeMenu()
-    }
-  }
-
   return (
     <header
       className={`fixed top-0 left-0 w-full z-40 p-4 sm:p-5 transition-all duration-300 ease-out ${
@@ -159,16 +151,17 @@ function Navbar({ onOpenResume }) {
         </div>
 
         {/* Desktop Resume Button */}
-        <button
-          onClick={handleResumeClick}
-          type="button"
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
           className="group hidden md:flex items-center justify-center text-xs font-semibold px-4 py-2 bg-transparent border border-cyan-400/60 text-cyan-300 rounded-full transition-all duration-300 hover:bg-cyan-400/10 hover:border-cyan-300 hover:shadow-[0_0_15px_-4px_rgba(34,211,238,0.4)] active:scale-98"
         >
           Resume{' '}
           <span className="ml-1.5 transition-transform duration-300 group-hover:translate-x-0.5">
             <ExternalLinkIcon />
           </span>
-        </button>
+        </a>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -196,12 +189,15 @@ function Navbar({ onOpenResume }) {
                   {link.text}
                 </a>
               ))}
-              <button
-                onClick={handleResumeClick}
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMenu}
                 className="flex items-center justify-center gap-1.5 w-full text-sm py-2.5 bg-cyan-400 text-black rounded-full font-semibold active:scale-98 transition-colors hover:bg-cyan-300"
               >
                 Resume <ExternalLinkIcon />
-              </button>
+              </a>
             </div>
           </div>
         )}

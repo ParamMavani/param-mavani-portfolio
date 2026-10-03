@@ -11,17 +11,15 @@ import Contact from './components/Contact.jsx'
 import CursorSpotlight from './components/CursorSpotlight.jsx'
 import LoadingScreen from './components/LoadingScreen.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
-import ResumeModal from './components/ResumeModal.jsx'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
-  const [isResumeOpen, setIsResumeOpen] = useState(false)
 
   return (
     <>
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       <CursorSpotlight />
-      <Navbar onOpenResume={() => setIsResumeOpen(true)} />
+      <Navbar />
       <main className="relative">
         <Hero />
         <Stats />
@@ -33,7 +31,6 @@ function App() {
         <Contact />
       </main>
       <ScrollToTop />
-      <ResumeModal isOpen={isResumeOpen} onClose={() => setIsResumeOpen(false)} />
     </>
   )
 }
