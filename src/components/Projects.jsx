@@ -1,6 +1,6 @@
 import { useState, useMemo, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink, Sparkles, Layers, ShieldCheck } from 'lucide-react'
+import { ExternalLink, Sparkles, Layers, ShieldCheck, Monitor, Globe } from 'lucide-react'
 import BookmartPreviewModal from './BookmartPreviewModal.jsx'
 
 // Custom GitHub SVG
@@ -56,6 +56,102 @@ const projectsData = [
     techStack: ['React', 'TypeScript', 'Node.js', 'Express.js', 'MongoDB Atlas', 'Google Gemini', 'JWT', 'Tailwind CSS'],
     githubUrl: 'https://github.com/ParamMavani/medcare-hospital-management-system',
     liveUrl: 'https://medcare-hospital-management-system-369010196112.asia-southeast1.run.app',
+  },
+  {
+    title: 'Pluto — Desktop Browser & Official Website',
+    tagline: 'Private. Independent. Yours.',
+    isFeatured: true,
+    status: 'Live & Open Source',
+    statusIcon: '🌌',
+    category: 'Full-Stack Development',
+    gradient: 'from-blue-600/25 via-indigo-600/20 to-cyan-500/20',
+    accentBorder: 'border-cyan-400/40',
+    description:
+      'Designed and developed Pluto, a modern desktop browser built with Electron, along with its official product website. The project focuses on a clean browsing experience, intuitive navigation, privacy-conscious design, and seamless product presentation.',
+    features: [
+      'Multi-tab browsing, bookmarks & history management',
+      'DuckDuckGo privacy search & clean minimal UI',
+      'Dedicated product, features & docs pages',
+      'macOS download portal & Vercel deployment',
+    ],
+    featureSections: [
+      {
+        title: 'Desktop Browser Features',
+        icon: 'browser',
+        items: [
+          'Multi-tab browsing and tab management',
+          'Bookmarks and browsing history',
+          'Smart address bar and keyboard shortcuts',
+          'Search and navigation functionality',
+          'Clean, minimal dark interface',
+        ],
+      },
+      {
+        title: 'Official Website Features',
+        icon: 'website',
+        items: [
+          'Dedicated product and features pages',
+          'Documentation',
+          'macOS download page',
+          'Responsive website design',
+          'Live deployment using Vercel',
+        ],
+      },
+    ],
+    techStackGroups: [
+      {
+        label: 'Desktop Browser',
+        items: ['Electron', 'JavaScript', 'HTML', 'CSS', 'Node.js'],
+      },
+      {
+        label: 'Official Website & Deployment',
+        items: ['HTML', 'CSS', 'JavaScript', 'GitHub', 'Vercel'],
+      },
+    ],
+    techStack: ['Electron', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'GitHub', 'Vercel'],
+    previews: [
+      {
+        id: 'browser',
+        title: 'Desktop Browser',
+        shortTitle: 'Browser',
+        subtitle: 'Pluto Desktop Browser Interface',
+        image: '/pluto/pluto-browser.png',
+        alt: 'Pluto Desktop Browser Interface Screenshot',
+      },
+      {
+        id: 'website',
+        title: 'Official Website',
+        shortTitle: 'Website',
+        subtitle: 'Pluto Official Website (Live on Vercel)',
+        image: '/pluto/pluto-website.png',
+        alt: 'Pluto Official Product Website Screenshot',
+      },
+      {
+        id: 'history',
+        title: 'History Panel',
+        shortTitle: 'History',
+        subtitle: 'Browsing & Search History Side Panel',
+        image: '/pluto/pluto-history.png',
+        alt: 'Pluto Browser History Side Panel Interface',
+      },
+    ],
+    customLinks: [
+      {
+        label: 'Live Website',
+        url: 'https://pluto-website-one.vercel.app/',
+        isPrimary: true,
+      },
+      {
+        label: 'Browser Source Code',
+        url: 'https://github.com/ParamMavani/pluto-browser',
+        isPrimary: false,
+      },
+      {
+        label: 'Website Source Code',
+        url: 'https://github.com/ParamMavani/pluto-website',
+        isPrimary: false,
+      },
+    ],
   },
   {
     title: 'BookMart – Full-Stack E-Commerce',
@@ -127,6 +223,7 @@ const projectsData = [
 
 const ProjectCard = memo(({ project, index, onOpenBookmart }) => {
   const isReversed = index % 2 !== 0
+  const [activePreviewTab, setActivePreviewTab] = useState(0)
 
   return (
     <motion.div
@@ -139,15 +236,22 @@ const ProjectCard = memo(({ project, index, onOpenBookmart }) => {
     >
       {/* Visual Mockup Column */}
       <div
-        className={`relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl p-6 sm:p-8 bg-gradient-to-br ${project.gradient} flex flex-col justify-between min-h-[260px] sm:min-h-[300px] ${
+        className={`relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl p-5 sm:p-7 bg-gradient-to-br ${project.gradient} flex flex-col justify-between min-h-[280px] sm:min-h-[340px] ${
           isReversed ? 'md:order-2' : ''
         }`}
       >
-        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        {/* Mockup Header */}
+        <div className="flex flex-wrap items-center justify-between border-b border-white/10 pb-3 mb-3 gap-2">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-red-400/80"></div>
             <div className="w-3 h-3 rounded-full bg-amber-400/80"></div>
             <div className="w-3 h-3 rounded-full bg-emerald-400/80"></div>
+            {project.previews && (
+              <span className="text-[11px] font-mono text-slate-300 ml-1.5 hidden sm:inline-flex items-center gap-1.5">
+                <img src="/pluto/pluto-logo.png" alt="" className="w-3.5 h-3.5 rounded-full" />
+                pluto-desktop
+              </span>
+            )}
           </div>
           <span className="text-xs font-mono text-cyan-300 flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
@@ -155,19 +259,85 @@ const ProjectCard = memo(({ project, index, onOpenBookmart }) => {
           </span>
         </div>
 
-        <div className="py-4 my-auto">
-          <div className="p-3 bg-slate-950/60 rounded-xl border border-white/10 mb-3 backdrop-blur-md">
-            <div className="text-xs font-mono text-cyan-400 mb-1">$ system --status</div>
-            <div className="text-xs font-mono text-slate-300 truncate">
-              {project.category} • {project.techStack.slice(0, 3).join(', ')}
+        {/* Visual Content: Custom Screenshots or Terminal Mockup */}
+        {project.previews ? (
+          <div className="py-2 my-auto">
+            {/* Interactive Preview View Switcher */}
+            <div className="flex items-center justify-between mb-3 gap-2">
+              <div className="flex items-center bg-slate-950/80 p-1 rounded-xl border border-white/10 gap-1 overflow-x-auto max-w-full">
+                {project.previews.map((prev, pIdx) => {
+                  const isSelected = activePreviewTab === pIdx
+                  return (
+                    <button
+                      key={prev.id}
+                      type="button"
+                      onClick={() => setActivePreviewTab(pIdx)}
+                      className={`px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-mono rounded-lg transition-all duration-200 cursor-pointer flex items-center gap-1 sm:gap-1.5 whitespace-nowrap ${
+                        isSelected
+                          ? 'bg-cyan-400 text-slate-950 font-bold shadow-md shadow-cyan-400/25'
+                          : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                      }`}
+                      aria-label={`Switch to ${prev.title}`}
+                    >
+                      {prev.id === 'browser' ? (
+                        <Monitor className="w-3 h-3 shrink-0" />
+                      ) : prev.id === 'website' ? (
+                        <Globe className="w-3 h-3 shrink-0" />
+                      ) : (
+                        <Layers className="w-3 h-3 shrink-0" />
+                      )}
+                      <span className="hidden sm:inline">{prev.title}</span>
+                      <span className="sm:hidden">{prev.shortTitle || prev.title}</span>
+                    </button>
+                  )
+                })}
+              </div>
+              <span className="text-[10px] font-mono text-cyan-400/90 bg-cyan-400/10 px-2 py-0.5 rounded-md border border-cyan-400/20 hidden md:inline-block">
+                Interactive Preview
+              </span>
+            </div>
+
+            {/* Screenshot Frame */}
+            <div className="relative rounded-xl overflow-hidden border border-white/15 bg-slate-950 shadow-2xl group/preview">
+              <div className="aspect-[16/10] overflow-hidden bg-slate-950 flex items-center justify-center">
+                <img
+                  src={project.previews[activePreviewTab].image}
+                  alt={project.previews[activePreviewTab].alt}
+                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-[1.02]"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Caption Overlay Bar */}
+              <div className="px-3 py-2 bg-slate-950/90 backdrop-blur-md border-t border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 truncate">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0"></span>
+                  <span className="font-mono text-slate-200 text-[11px] truncate">
+                    {project.previews[activePreviewTab].subtitle}
+                  </span>
+                </div>
+                <span className="font-mono text-slate-400 text-[10px] shrink-0 ml-2">
+                  {activePreviewTab + 1} of {project.previews.length}
+                </span>
+              </div>
             </div>
           </div>
-          <h4 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            {project.title}
-          </h4>
-        </div>
+        ) : (
+          <div className="py-4 my-auto">
+            <div className="p-3 bg-slate-950/60 rounded-xl border border-white/10 mb-3 backdrop-blur-md">
+              <div className="text-xs font-mono text-cyan-400 mb-1">$ system --status</div>
+              <div className="text-xs font-mono text-slate-300 truncate">
+                {project.category} • {project.techStack.slice(0, 3).join(', ')}
+              </div>
+            </div>
+            <h4 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              {project.title}
+            </h4>
+          </div>
+        )}
 
-        <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/10">
+        {/* Feature Badges Footer */}
+        <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/10">
           {project.features.slice(0, 2).map((feat, i) => (
             <span
               key={i}
@@ -182,7 +352,7 @@ const ProjectCard = memo(({ project, index, onOpenBookmart }) => {
 
       {/* Description & Action Column */}
       <div className={isReversed ? 'md:order-1' : ''}>
-        <div className="flex flex-wrap items-center gap-2 mb-4">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
           {project.isFeatured && (
             <span className="inline-flex items-center gap-1 bg-violet-500/20 text-violet-300 border border-violet-500/30 px-3 py-1 rounded-full text-xs font-semibold">
               <Sparkles className="w-3 h-3" />
@@ -197,69 +367,157 @@ const ProjectCard = memo(({ project, index, onOpenBookmart }) => {
           </span>
         </div>
 
-        <h3 className="text-2xl sm:text-3xl font-bold text-text-primary mb-3">
+        <h3 className="text-2xl sm:text-3xl font-bold text-text-primary mb-1">
           {project.title}
         </h3>
+
+        {project.tagline && (
+          <p className="text-xs sm:text-sm font-mono tracking-wide text-cyan-400 mb-3 flex items-center gap-1.5 font-medium">
+            <span className="text-cyan-400 text-base leading-none">✦</span>
+            <span>{project.tagline}</span>
+          </p>
+        )}
+
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed mb-5">
           {project.description}
         </p>
 
-        <div className="bg-slate-800/60 p-4 rounded-xl mb-5 border border-white/5">
-          <h4 className="text-xs uppercase tracking-wider font-semibold text-cyan-300 mb-1 flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5" />
-            Problem Addressed
-          </h4>
-          <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-            {project.problem}
-          </p>
-        </div>
+        {/* Key Features Breakdown */}
+        {project.featureSections ? (
+          <div className="space-y-3 mb-5">
+            {project.featureSections.map((sec, sIdx) => (
+              <div key={sIdx} className="bg-slate-800/60 p-3.5 sm:p-4 rounded-xl border border-white/5">
+                <h4 className="text-xs uppercase tracking-wider font-semibold text-cyan-300 mb-2 flex items-center gap-1.5">
+                  {sec.icon === 'browser' ? (
+                    <Monitor className="w-3.5 h-3.5 text-cyan-400" />
+                  ) : (
+                    <Globe className="w-3.5 h-3.5 text-cyan-400" />
+                  )}
+                  {sec.title}
+                </h4>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
+                  {sec.items.map((item, i) => (
+                    <li key={i} className="text-xs sm:text-[13px] text-text-secondary flex items-start gap-1.5">
+                      <span className="text-cyan-400 mt-0.5 leading-none font-bold">›</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : project.problem ? (
+          <div className="bg-slate-800/60 p-4 rounded-xl mb-5 border border-white/5">
+            <h4 className="text-xs uppercase tracking-wider font-semibold text-cyan-300 mb-1 flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5" />
+              Problem Addressed
+            </h4>
+            <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
+              {project.problem}
+            </p>
+          </div>
+        ) : null}
 
-        <div className="flex flex-wrap gap-2 mb-6">
-          {project.techStack.map((tech) => (
-            <span
-              key={tech}
-              className="bg-slate-700/40 text-text-secondary text-xs font-medium px-3 py-1 rounded-full border border-white/5"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
+        {/* Technology Stack Badges */}
+        {project.techStackGroups ? (
+          <div className="space-y-3 mb-6">
+            {project.techStackGroups.map((group, gIdx) => (
+              <div key={gIdx} className="space-y-1.5">
+                <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                  {group.label}:
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((tech) => (
+                    <span
+                      key={tech}
+                      className="bg-slate-700/40 text-text-secondary text-xs font-medium px-3 py-1 rounded-full border border-white/5"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {project.techStack.map((tech) => (
+              <span
+                key={tech}
+                className="bg-slate-700/40 text-text-secondary text-xs font-medium px-3 py-1 rounded-full border border-white/5"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
 
+        {/* Project Links & Action Buttons */}
         <div className="flex flex-wrap items-center gap-3">
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-text-primary bg-slate-800/80 hover:bg-slate-700 border border-white/10 rounded-full transition-all duration-300"
-            >
-              <GithubIcon />
-              <span>Source Code</span>
-            </a>
-          )}
-          {project.hasInteractivePreview ? (
-            <button
-              onClick={onOpenBookmart}
-              type="button"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-black bg-cyan-400 hover:bg-cyan-300 rounded-full shadow-lg shadow-cyan-400/25 transition-all duration-300 hover:scale-102 active:scale-95 cursor-pointer"
-            >
-              <span>Live Interactive Preview</span>
-              <Sparkles className="w-3.5 h-3.5" />
-            </button>
-          ) : project.liveUrl ? (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-black bg-cyan-400 hover:bg-cyan-300 rounded-full shadow-lg shadow-cyan-400/20 transition-all duration-300"
-            >
-              <span>Live Application</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+          {project.customLinks ? (
+            project.customLinks.map((link, lIdx) => (
+              <a
+                key={lIdx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-full transition-all duration-300 hover:scale-102 active:scale-95 ${
+                  link.isPrimary
+                    ? 'text-black bg-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-400/20'
+                    : 'text-text-primary bg-slate-800/80 hover:bg-slate-700 border border-white/10 hover:border-cyan-400/30'
+                }`}
+              >
+                {link.isPrimary ? (
+                  <>
+                    <span>{link.label}</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </>
+                ) : (
+                  <>
+                    <GithubIcon />
+                    <span>{link.label}</span>
+                  </>
+                )}
+              </a>
+            ))
           ) : (
-            <span className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-slate-400 bg-slate-800/40 border border-slate-700/50 rounded-full cursor-default">
-              Live Preview Soon
-            </span>
+            <>
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-text-primary bg-slate-800/80 hover:bg-slate-700 border border-white/10 rounded-full transition-all duration-300"
+                >
+                  <GithubIcon />
+                  <span>Source Code</span>
+                </a>
+              )}
+              {project.hasInteractivePreview ? (
+                <button
+                  onClick={onOpenBookmart}
+                  type="button"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-black bg-cyan-400 hover:bg-cyan-300 rounded-full shadow-lg shadow-cyan-400/25 transition-all duration-300 hover:scale-102 active:scale-95 cursor-pointer"
+                >
+                  <span>Live Interactive Preview</span>
+                  <Sparkles className="w-3.5 h-3.5" />
+                </button>
+              ) : project.liveUrl ? (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-black bg-cyan-400 hover:bg-cyan-300 rounded-full shadow-lg shadow-cyan-400/20 transition-all duration-300"
+                >
+                  <span>Live Application</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              ) : (
+                <span className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-slate-400 bg-slate-800/40 border border-slate-700/50 rounded-full cursor-default">
+                  Live Preview Soon
+                </span>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -303,7 +561,7 @@ export default function Projects() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
                   isActive
                     ? 'text-cyan-300 bg-cyan-950/60 border border-cyan-400/50 shadow-[0_0_12px_rgba(34,211,238,0.2)]'
                     : 'text-text-secondary bg-slate-800/40 border border-white/5 hover:text-text-primary hover:bg-slate-800/80'
